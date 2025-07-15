@@ -43,10 +43,8 @@ GOOGLE_SHEET_ID=<your-sheet-id>
 GOOGLE_APPLICATION_CREDENTIALS=<path-to-service-account-json>
 
 # External APIs
-API_A_KEY=<your-api-a-key>
-API_B_KEY=<your-api-b-key>
-API_A_URL=<api-a-endpoint>
-API_B_URL=<api-b-endpoint>
+API_SECRET_KEY=<your-api-key>
+API_URL=<api-endpoint>
 
 # Application
 PORT=3000
