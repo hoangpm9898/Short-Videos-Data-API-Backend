@@ -8,7 +8,6 @@ import { readJsonFile, writeJsonFile } from '#root/common/helpers/file.helper';
 import { InfoData } from '#root/common/dto/info-data.dto';
 import { ShortsDataService } from '#root/modules/shorts-data/shorts-data.service';
 import { config } from '#root/config';
-import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class InfoDataService {
@@ -26,29 +25,20 @@ export class InfoDataService {
       version: 'v4',
       auth: config.GOOGLE_APPLICATION_CREDENTIALS,
     });
-    let response;
-   try {
-      response = await sheets.spreadsheets.values.get({
-       spreadsheetId: this.sheetId,
-       range: `!A:D`,
-     });
-   }
-   catch (error) {
-     console.error('Error fetching data from Google Sheet:', error);
-     throw new Error('Failed to fetch data from Google Sheet');
-   }
+    const response = await sheets.spreadsheets.values.get({
+     spreadsheetId: this.sheetId,
+     range: `!A:D`,
+    });
+
     const rows = response.data.values || [];
-    const infoData: InfoData[] = rows.slice(1).map((row) => ({
+    return rows.slice(1).map((row) => ({
       id: row[0],
       status: row[1],
       username: row[2],
       total_videos: parseInt(row[3] || '0', 10),
     }));
-
-    return infoData;
   }
 
-  @Cron('*/10 * * * * *')
   async processInfoData(): Promise<void> {
 
     const infoData = await this.fetchInfoFromSheet();
