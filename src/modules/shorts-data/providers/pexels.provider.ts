@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
 import { BaseProvider } from './base.provider';
-import { ShortsData } from '../../../common/dto/shorts-data.dto';
+import { ShortsData } from '#root/common/dto/shorts-data.dto';
 
 @Injectable()
 export class PexelsApiProvider extends BaseProvider {

@@ -5,7 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 
 import { InfoDataService } from './info-data.service';
 import { InfoDataScheduler } from './info-data.scheduler';
-import { ShortsDataModule } from '../shorts-data/shorts-data.module';
+import { ShortsDataModule } from '#root/modules/shorts-data/shorts-data.module';
 
 @Module({
   imports: [HttpModule, ShortsDataModule],

@@ -4,7 +4,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ApiService } from './api.service';
-import { Short } from '../../common/entities/short.entity';
+import { Short } from '#root/common/entities/short.entity';
 
 @ApiTags('Shorts')
 @Controller('shorts')

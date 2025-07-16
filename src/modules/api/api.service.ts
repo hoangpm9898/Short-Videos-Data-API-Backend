@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 
-import { Short } from '../../common/entities/short.entity';
+import { Short } from '#root/common/entities/short.entity';
 
 @Injectable()
 export class ApiService {

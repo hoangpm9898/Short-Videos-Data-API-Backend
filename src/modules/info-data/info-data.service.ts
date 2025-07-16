@@ -2,22 +2,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
 import { google } from 'googleapis';
 
-import { readJsonFile, writeJsonFile } from '../../common/helpers/file.helper';
-import { InfoData } from '../../common/dto/info-data.dto';
-import { ShortsDataService } from '../shorts-data/shorts-data.service';
+import { readJsonFile, writeJsonFile } from '#root/common/helpers/file.helper';
+import { InfoData } from '#root/common/dto/info-data.dto';
+import { ShortsDataService } from '#root/modules/shorts-data/shorts-data.service';
+import { config } from '#root/config';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class InfoDataService {
 
-  private readonly sheetId = process.env.GOOGLE_SHEET_ID;
+  private readonly sheetId : string = config.GOOGLE_SHEET_ID;
   private readonly jsonPath = 'data/info_data.json';
 
   constructor(
-    private readonly httpService: HttpService,
     private readonly shortsDataService: ShortsDataService,
   ) {}
 
@@ -25,14 +24,19 @@ export class InfoDataService {
 
     const sheets = google.sheets({
       version: 'v4',
-      auth: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+      auth: config.GOOGLE_APPLICATION_CREDENTIALS,
     });
-
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: this.sheetId,
-      range: `${process.env.GOOGLE_SHEET_NAME}!A:D`,
-    });
-
+    let response;
+   try {
+      response = await sheets.spreadsheets.values.get({
+       spreadsheetId: this.sheetId,
+       range: `!A:D`,
+     });
+   }
+   catch (error) {
+     console.error('Error fetching data from Google Sheet:', error);
+     throw new Error('Failed to fetch data from Google Sheet');
+   }
     const rows = response.data.values || [];
     const infoData: InfoData[] = rows.slice(1).map((row) => ({
       id: row[0],
@@ -44,6 +48,7 @@ export class InfoDataService {
     return infoData;
   }
 
+  @Cron('*/10 * * * * *')
   async processInfoData(): Promise<void> {
 
     const infoData = await this.fetchInfoFromSheet();
@@ -67,13 +72,13 @@ export class InfoDataService {
     // Update Google Sheet
     const sheets = google.sheets({
       version: 'v4',
-      auth: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+      auth: config.GOOGLE_APPLICATION_CREDENTIALS,
     });
 
     const index = infoData.findIndex((item) => item.id === id) + 2;
-    await sheets.spreadsheets.values.update({
+    sheets.spreadsheets.values.update({
       spreadsheetId: this.sheetId,
-      range: `${process.env.GOOGLE_SHEET_NAME}!C${index}:D${index}`,
+      range: `${config.GOOGLE_SHEET_NAME}!C${index}:D${index}`,
       valueInputOption: 'RAW',
       requestBody: { values: [[status, totalVideos]] },
     });

@@ -4,9 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Short } from '../../common/entities/short.entity';
+import { Short } from '#root/common/entities/short.entity';
 import { ProviderFactory } from './providers/provider.factory';
-import { ShortsData } from '../../common/dto/shorts-data.dto';
+import { ShortsData } from '#root/common/dto/shorts-data.dto';
 import { ShortsProvider } from './interfaces/provider.interface';
 
 @Injectable()

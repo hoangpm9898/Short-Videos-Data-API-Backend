@@ -4,7 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
 import { ShortsProvider } from '../interfaces/provider.interface';
-import { ShortsData } from '../../../common/dto/shorts-data.dto';
+import { ShortsData } from '#root/common/dto/shorts-data.dto';
 
 export abstract class BaseProvider implements ShortsProvider {
 

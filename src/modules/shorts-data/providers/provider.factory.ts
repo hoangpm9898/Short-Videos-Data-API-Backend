@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
 import { PexelsApiProvider } from './pexels.provider';
-import { ShortsProvider } from '../interfaces/provider.interface';
+import { ShortsProvider } from '#root/modules/shorts-data/interfaces/provider.interface';
 
 @Injectable()
 export class ProviderFactory {
