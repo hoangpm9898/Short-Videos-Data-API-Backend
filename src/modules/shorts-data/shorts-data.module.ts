@@ -2,18 +2,19 @@
 
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { ShortsDataService } from './shorts-data.service';
-import { Short } from '../../common/entities/short.entity';
 import { ProviderFactory } from './providers/provider.factory';
 import { PexelsApiProvider } from './providers/pexels.provider';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ShortData, ShortDataSchema } from '#root/common/schema/shorts-data.schema';
+import { ShortsDataController } from '#root/modules/shorts-data/shorts-data.controller';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([Short])],
+  imports: [HttpModule, MongooseModule.forFeature([{ name: ShortData.name, schema: ShortDataSchema }])],
   providers: [
     ShortsDataService, ProviderFactory, PexelsApiProvider
   ],
+  controllers: [ShortsDataController],
   exports: [ShortsDataService],
 })
 export class ShortsDataModule {}
