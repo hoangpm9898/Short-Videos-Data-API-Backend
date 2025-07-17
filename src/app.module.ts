@@ -1,23 +1,23 @@
 /* eslint-disable prettier/prettier */
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HttpModule } from '@nestjs/axios';
 
 import { InfoDataModule } from './modules/info-data/info-data.module';
 import { ShortsDataModule } from './modules/shorts-data/shorts-data.module';
-import { ApiModule } from './modules/api/api.module';
-import { databaseConfig } from './common/config/database.config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { config } from '#root/config';
+import { AppController } from '#root/app.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(databaseConfig),
     ScheduleModule.forRoot(),
+    MongooseModule.forRoot(config.DATABASE_URL),
     HttpModule,
     InfoDataModule,
     ShortsDataModule,
-    ApiModule,
   ],
+  controllers: [AppController]
 })
 export class AppModule {}

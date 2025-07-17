@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { BaseProvider } from './base.provider';
 import { ShortsData } from '#root/common/dto/shorts-data.dto';
+import { config } from '#root/config';
 
 @Injectable()
 export class PexelsApiProvider extends BaseProvider {
@@ -15,26 +16,20 @@ export class PexelsApiProvider extends BaseProvider {
   }
 
   async fetchShorts(username: string): Promise<ShortsData[]> {
-
-    const userId = await this.getUserId(username, process.env.API_PEXELS_URL, process.env.API_PEXELS_KEY);
-    
-    let page = 1;
-    let hasMore = true;
-    const shorts: ShortsData[] = [];
-
+    let page: number = 1;
+    let hasMore: boolean = true;
+    const shorts: any[] = [];
     while (hasMore) {
       const response = await firstValueFrom(
-        this.httpService.get(`${process.env.API_PEXELS_URL}/${username}/media/popular?page=${page}`, {
-          headers: { "Secret-Key": process.env.API_PEXELS_KEY },
+        this.httpService.get(`${config.API_PEXELS_URL}/${username}/media/popular?page=${page}`, {
+          headers: { "Secret-Key": config.API_PEXELS_KEY },
         }),
       );
-      const data = response.data.shorts || [];
-      hasMore = response.data.has_more || false; // Adjust based on API response
+      const data = response.data.data || [];
+      hasMore = response.data.pagination.current_page < response.data.pagination.total_pages || false;
       page++;
-
-      shorts.push(...this.normalizeShorts(data, username, userId));
+      shorts.push(...this.normalizeShorts(data));
     }
-
     return shorts;
   }
 }

@@ -8,11 +8,11 @@ import { InfoDataService } from './info-data.service';
 export class InfoDataScheduler {
   
   constructor(private readonly infoDataService: InfoDataService) {}
-  private readonly logger = new Logger(InfoDataScheduler.name);
+  private readonly logger: Logger = new Logger(InfoDataScheduler.name);
 
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
-    this.logger.log('\n**** Fetching info data from Google Sheet...');
+    this.logger.log('**** Fetching info data from Google Sheet...');
     await this.infoDataService.processInfoData();
   }
 }

@@ -1,11 +1,35 @@
 /* eslint-disable prettier/prettier */
 
 export interface ShortsData {
-  short_id: string;
-  user_id: string;
-  username: string;
+  _id: number;
+  user : UserData;
+  title: string;
   description: string;
   tags: string[];
-  created_at: Date;
-  url: string;
+  video : VideoData
+  provider: string;
+}
+
+export interface VideoData {
+  file_type: string;
+  quality: string;
+  width: number;
+  height: number;
+  fps: number;
+  link: string;
+}
+
+export interface UserData {
+  id: number,
+  first_name: string,
+  last_name: string,
+  slug: string,
+  username: string,
+  location: string,
+  avatar: {
+    small: string,
+    medium: string,
+    large: string
+  },
+  hero: boolean,
 }
